@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+using namespace std;
+using namespace chrono;
+
+int sum_naive(const vector<int>& nums) {
+    int sum = 0;
+    for (int num : nums) {
+        sum += num;
+    }
+    return sum;
+}
+
+int sum_recursive(const vector<int>& nums, int index) {
+    if (index == nums.size()) {
+        return 0;
+    }
+    return nums[index] + sum_recursive(nums, index + 1);
+}
+
+int sum_recursive(const vector<int>& nums) {
+    return sum_recursive(nums, 0);
+}
+
+int sum_builtin(const vector<int>& nums) {
+    return accumulate(nums.begin(), nums.end(), 0);
+}
+
+int main() {
+    vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    auto start_naive = high_resolution_clock::now();
+    int sum_naive_result = sum_naive(numbers);
+    auto stop_naive = high_resolution_clock::now();
+    auto duration_naive = duration_cast<microseconds>(stop_naive - start_naive);
+
+    auto start_recursive = high_resolution_clock::now();
+    int sum_recursive_result = sum_recursive(numbers);
+    auto stop_recursive = high_resolution_clock::now();
+    auto duration_recursive = duration_cast<microseconds>(stop_recursive - start_recursive);
+
+    auto start_builtin = high_resolution_clock::now();
+    int sum_builtin_result = sum_builtin(numbers);
+    auto stop_builtin = high_resolution_clock::now();
+    auto duration_builtin = duration_cast<microseconds>(stop_builtin - start_builtin);
+
+    cout << "Sum (Naive): " << sum_naive_result << " (Time: " << duration_naive.count() << " microseconds)" << endl;
+    cout << "Sum (Recursive): " << sum_recursive_result << " (Time: " << duration_recursive.count() << " microseconds)" << endl;
+    cout << "Sum (Built-in): " << sum_builtin_result << " (Time: " << duration_builtin.count() << " microseconds)" << endl;
+
+    return 0;
+}
